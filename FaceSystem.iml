@@ -15,6 +15,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
+          <factory-entry name="FaceSystem" />
           <factory-entry name="entityManagerFactory" />
         </datasource-mapping>
         <naming-strategy-map />
@@ -209,9 +210,8 @@
     <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-svnexe:1.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-provider-svn-commons:1.4" level="project" />
     <orderEntry type="library" name="Maven: regexp:regexp:1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.testng:testng:7.6.1" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.testng:testng:7.7.1" level="project" />
     <orderEntry type="library" name="Maven: com.beust:jcommander:1.82" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.webjars:jquery:3.6.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.webjars:jquery:3.6.1" level="project" />
   </component>
 </module>

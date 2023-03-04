@@ -19,9 +19,11 @@ import java.util.Objects;
 public class ImageUtil {
 
     private static IUserService userService;
+
     @Autowired
-    public void runIUserService(IUserService userService)
-    {ImageUtil.userService=userService;}
+    public void runIUserService(IUserService userService) {
+        ImageUtil.userService = userService;
+    }
 
     /**
      * @param // file base64编码字符串
@@ -65,53 +67,53 @@ public class ImageUtil {
 //    }
 
     /*
-    * 用户-将base64转成图片
-    * */
+     * 用户-将base64转成图片
+     * */
     @SneakyThrows
     public static Map<String, String> Base64ToPic(String Type, String base64Data, HttpServletRequest request) {
         Map<String, String> map = null;                            //给前端的结果
 
         //获取根目录
         File path = new File(ResourceUtils.getURL("").getPath());
-        if(!path.exists()) path = new File("");
+        if (!path.exists()) path = new File("");
         //用上传时间表示文件名防止冲突
-        String picName = "/"+JwtUtil.getEmail(request)+"_"+JwtUtil.getUserName(request)+".jpg";
+        String picName = "/" + JwtUtil.getEmail(request) + "_" + JwtUtil.getUserName(request) + ".jpg";
 
-            String src = null;
-            if (Type.equals("face")) {                          //设置图片存放文件夹的路径
-                src = "/images/face";
-            }else if(Type.equals("head")){
-                src = "/images/head";
-            }
+        String src = null;
+        if (Type.equals("face")) {                          //设置图片存放文件夹的路径
+            src = "/images/face";
+        } else if (Type.equals("head")) {
+            src = "/images/head";
+        }
 
-            String data = base64Data.split("base64,")[1];//获取base64的图片部分
-            byte[] bs = Base64Utils.decodeFromString(data);     //base64解码
+        String data = base64Data.split("base64,")[1];//获取base64的图片部分
+        byte[] bs = Base64Utils.decodeFromString(data);     //base64解码
 
 
-            String filepath2 = path.getAbsolutePath()+src;          //拼接路径
-            /*没有此文件夹就创建*/
-            File filePath = new File(path.getAbsolutePath(),src);
-            if(!filePath.exists()) {
-                filePath.mkdirs();
-            }
+        String filepath2 = path.getAbsolutePath() + src;          //拼接路径
+        /*没有此文件夹就创建*/
+        File filePath = new File(path.getAbsolutePath(), src);
+        if (!filePath.exists()) {
+            filePath.mkdirs();
+        }
 
-            //创建文件
-            File imageFile = new File(picName);
-            if (!imageFile.exists()) {
-                imageFile.createNewFile();
-            }
-            //将二进制写入文件
-            OutputStream imageStream = new FileOutputStream(filepath2+picName);
-            imageStream.write(bs);
-            imageStream.flush();
-            imageStream.close();
+        //创建文件
+        File imageFile = new File(picName);
+        if (!imageFile.exists()) {
+            imageFile.createNewFile();
+        }
+        //将二进制写入文件
+        OutputStream imageStream = new FileOutputStream(filepath2 + picName);
+        imageStream.write(bs);
+        imageStream.flush();
+        imageStream.close();
 
-            System.out.println("人脸照片保存路径filePath："+filePath);
-            System.out.println("图片完整路径filePath + picName："+filePath + picName);
+        System.out.println("人脸照片保存路径filePath：" + filePath);
+        System.out.println("图片完整路径filePath + picName：" + filePath + picName);
 
-            map = new HashMap<>();
-            map.put("src", src);
-            map.put("picName", picName);
+        map = new HashMap<>();
+        map.put("src", src);
+        map.put("picName", picName);
 
 
         return map;
@@ -126,21 +128,21 @@ public class ImageUtil {
 
         //获取根目录
         File path = new File(ResourceUtils.getURL("").getPath());
-        if(!path.exists()) path = new File("");
+        if (!path.exists()) path = new File("");
         //用上传时间表示文件名防止冲突
-        String picName = "/"+user.getEmail()+"_"+user.getUsername()+".jpg";
+        String picName = "/" + user.getEmail() + "_" + user.getUsername() + ".jpg";
 
         String src = null;
         if (Type.equals("face")) {                          //设置图片存放文件夹的路径
             src = "/images/face";
-        }else if(Type.equals("head")){
+        } else if (Type.equals("head")) {
             src = "/images/head";
         }
 
-        String filepath2 = path.getAbsolutePath()+src;          //拼接路径
+        String filepath2 = path.getAbsolutePath() + src;          //拼接路径
         /*没有此文件夹就创建*/
-        File filePath = new File(path.getAbsolutePath(),src);
-        if(!filePath.exists()) {
+        File filePath = new File(path.getAbsolutePath(), src);
+        if (!filePath.exists()) {
             filePath.mkdirs();
         }
 
@@ -150,7 +152,7 @@ public class ImageUtil {
             imageFile.createNewFile();
         }
         //将二进制写入文件
-        OutputStream imageStream = new FileOutputStream(filepath2+picName);
+        OutputStream imageStream = new FileOutputStream(filepath2 + picName);
         imageStream.write(picData);
         imageStream.flush();
         imageStream.close();
@@ -174,14 +176,14 @@ public class ImageUtil {
 
         //获取根目录
         File path = new File(ResourceUtils.getURL("").getPath());
-        if(!path.exists()) path = new File("");
+        if (!path.exists()) path = new File("");
         //用上传时间表示文件名防止冲突
-        String picName = "/"+user.getEmail()+"_"+user.getUsername()+".jpg";
+        String picName = "/" + user.getEmail() + "_" + user.getUsername() + ".jpg";
 
         String src = null;
         if (Type.equals("face")) {                          //设置图片存放文件夹的路径
             src = "/images/face";
-        }else if(Type.equals("head")){
+        } else if (Type.equals("head")) {
             src = "/images/head";
         }
 
@@ -189,10 +191,10 @@ public class ImageUtil {
         byte[] bs = Base64Utils.decodeFromString(data);     //base64解码
 
 
-        String filepath2 = path.getAbsolutePath()+src;          //拼接路径
+        String filepath2 = path.getAbsolutePath() + src;          //拼接路径
         /*没有此文件夹就创建*/
-        File filePath = new File(path.getAbsolutePath(),src);
-        if(!filePath.exists()) {
+        File filePath = new File(path.getAbsolutePath(), src);
+        if (!filePath.exists()) {
             filePath.mkdirs();
         }
 
@@ -202,13 +204,13 @@ public class ImageUtil {
             imageFile.createNewFile();
         }
         //将二进制写入文件
-        OutputStream imageStream = new FileOutputStream(filepath2+picName);
+        OutputStream imageStream = new FileOutputStream(filepath2 + picName);
         imageStream.write(bs);
         imageStream.flush();
         imageStream.close();
 
-        System.out.println("人脸照片保存路径filePath："+filePath);
-        System.out.println("图片完整路径filePath + picName："+filePath + picName);
+        System.out.println("人脸照片保存路径filePath：" + filePath);
+        System.out.println("图片完整路径filePath + picName：" + filePath + picName);
 
         map = new HashMap<>();
         map.put("src", src);
@@ -223,14 +225,14 @@ public class ImageUtil {
 
         //获取根目录
         File path = new File(ResourceUtils.getURL("").getPath());
-        if(!path.exists()) path = new File("");
+        if (!path.exists()) path = new File("");
         //用上传时间表示文件名防止冲突
-        String picName = "/"+user.getEmail()+"_"+user.getUsername()+".jpg";
+        String picName = "/" + user.getEmail() + "_" + user.getUsername() + ".jpg";
 
         String src = null;
         if (Type.equals("face")) {                          //设置图片存放文件夹的路径
             src = "/images/face";
-        }else if(Type.equals("head")){
+        } else if (Type.equals("head")) {
             src = "/images/head";
         }
 
@@ -238,10 +240,10 @@ public class ImageUtil {
         byte[] bs = Base64Utils.decodeFromString(data);     //base64解码
 
 
-        String filepath2 = path.getAbsolutePath()+src;          //拼接路径
+        String filepath2 = path.getAbsolutePath() + src;          //拼接路径
 
-        File filePath = new File(path.getAbsolutePath(),src);
-        if(!filePath.exists()) {
+        File filePath = new File(path.getAbsolutePath(), src);
+        if (!filePath.exists()) {
             filePath.mkdirs();
         }
 
@@ -251,13 +253,13 @@ public class ImageUtil {
             imageFile.createNewFile();
         }
         //将二进制写入文件
-        OutputStream imageStream = new FileOutputStream(filepath2+picName);
+        OutputStream imageStream = new FileOutputStream(filepath2 + picName);
         imageStream.write(bs);
         imageStream.flush();
         imageStream.close();
 
-        System.out.println("人脸照片保存路径filePath："+filePath);
-        System.out.println("图片完整路径filePath + picName："+filePath + picName);
+        System.out.println("人脸照片保存路径filePath：" + filePath);
+        System.out.println("图片完整路径filePath + picName：" + filePath + picName);
 
         map = new HashMap<>();
         map.put("src", src);
@@ -268,8 +270,8 @@ public class ImageUtil {
     }
 
     /*
-    *将图片转成base64
-    * */
+     *将图片转成base64
+     * */
     @SneakyThrows
     public static String PicToBase64(User user) {
         //获取根目录

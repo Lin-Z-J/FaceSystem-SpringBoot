@@ -23,7 +23,8 @@
     </resultMap>
 
     <!--模糊查询单个用户创建或加入的会议-->
-    <select id="searchUserMeetingByWant" parameterType="com.org.model.dto.Meeting1DTO" resultType="com.org.model.vo.MeetingVO">
+    <select id="searchUserMeetingByWant" parameterType="com.org.model.dto.Meeting1DTO"
+            resultType="com.org.model.vo.MeetingVO">
         SELECT mm.id, mm.name, room_name, online, mm.create_time, link, mm.introduce,
         mm.update_time, mm.meeting_time, mm.sign_time, user_number, sign_number, mum.state FROM m_meeting mm
         JOIN m_meeting_room mmr
@@ -49,44 +50,59 @@
 
     <!--查询全部会议信息并附带主持人、会议室-->
     <select id="searchAllMeeting" resultMap="meeting1">
-        select * from m_meeting m
-                          JOIN m_user_meeting um
-                               ON um.MEETING_ID = m.ID
-                          JOIN m_user u
-                               ON  u.ID = um.USER_ID
+        select *
+        from m_meeting m
+                 JOIN m_user_meeting um
+                      ON um.MEETING_ID = m.ID
+                 JOIN m_user u
+                      ON u.ID = um.USER_ID
         WHERE m.DELETED = 0
     </select>
 
     <!--分页查询单个用户创建或加入的会议 已经删掉了，用原始的mapper-->
     <select id="searchMeetingByPage" parameterType="int" resultType="com.org.model.Meeting">
-        select * from m_meeting m
-            JOIN m_user_meeting um
-        ON um.MEETING_ID = m.ID
-            JOIN m_user u
-            ON  u.ID = um.USER_ID
-        WHERE u.ID = #{id} AND um.DELETED = 0 limit #{start},#{end}
+        select *
+        from m_meeting m
+                 JOIN m_user_meeting um
+                      ON um.MEETING_ID = m.ID
+                 JOIN m_user u
+                      ON u.ID = um.USER_ID
+        WHERE u.ID = #{id}
+          AND um.DELETED = 0 limit #{start}
+            , #{end}
     </select>
     <!--查询单个会议的主持人-->
     <select id="searchHost" parameterType="int" resultType="String">
-        SELECT `username` FROM `m_user` where id = (
-            SELECT `user_id` FROM m_user_meeting
-                where um_power=3 AND meeting_id = #{meetingid}
-            )
+        SELECT `username`
+        FROM `m_user`
+        where id = (SELECT `user_id`
+                    FROM m_user_meeting
+                    where um_power = 3
+                      AND meeting_id = #{meetingid})
     </select>
     <!--查询单个会议的会议室-->
     <select id="searchRoom" parameterType="Integer" resultType="String">
-        SELECT `room_name` FROM `m_room` where id = (
-            SELECT `roomid` FROM m_meeting_room
-            where meetingid = #{id}
-        )
+        SELECT `room_name`
+        FROM `m_room`
+        where id = (SELECT `roomid`
+                    FROM m_meeting_room
+                    where meetingid = #{id})
     </select>
 
     <!--查询此会议的参会人员参会信息-->
     <select id="meetingMessage" parameterType="int" resultType="com.org.model.excel.MeetingMessage">
-        SELECT `username`,`nickname`,`sex`,`um_power`,`state`,`start_time`,`end_time`, time_to_sec(timediff(`end_time`,`start_time`)) as `all_time`
+        SELECT `username`,
+               `nickname`,
+               `sex`,
+               `um_power`,
+               `state`,
+               `start_time`,
+               `end_time`,
+               time_to_sec(timediff(`end_time`, `start_time`)) as `all_time`
         FROM `m_user_meeting` as um
-            right join `m_user` as u
-                on u.id=um.user_id where um.meeting_id=#{meetingid}
+                 right join `m_user` as u
+                            on u.id = um.user_id
+        where um.meeting_id = #{meetingid}
     </select>
 
     <!--查找会议中用户的签到成功状态-->
@@ -94,14 +110,18 @@
         SELECT u.id, u.username, um.start_time, um.state, u.face_url
         FROM `m_user_meeting` as um
                  right join `m_user` as u
-                            on u.id=um.user_id where (um.state=1 OR um.state=2) AND um.meeting_id = #{meetingid}
+                            on u.id = um.user_id
+        where (um.state = 1 OR um.state = 2)
+          AND um.meeting_id = #{meetingid}
     </select>
     <!--查找会议中用户的签到失败状态-->
     <select id="searchUserSateNO" parameterType="int" resultType="com.org.model.vo.Meeting2VO">
         SELECT u.id, u.username, um.start_time, um.state, u.face_url
         FROM `m_user_meeting` as um
                  right join `m_user` as u
-                            on u.id=um.user_id where um.state=0 AND um.meeting_id = #{meetingid}
+                            on u.id = um.user_id
+        where um.state = 0
+          AND um.meeting_id = #{meetingid}
     </select>
 
     <!--模糊查找会议中用户的签到成功状态，用haspmap装参数-->
@@ -119,8 +139,8 @@
     <select id="searchUserSateNOByWant" parameterType="hashmap" resultType="com.org.model.vo.Meeting2VO">
         SELECT u.id, u.username, um.start_time, um.state, u.face_url
         FROM `m_user_meeting` as um
-                 right join `m_user` as u
-                            on u.id=um.user_id
+        right join `m_user` as u
+        on u.id=um.user_id
         where um.state=0 AND um.meeting_id = #{meetingid}
         <if test="username!=null and username!=''">
             AND u.username like CONCAT('%',#{username},'%')
@@ -130,17 +150,17 @@
     <!--管理员-模糊查询会议-->
     <select id="searchMeeting" parameterType="com.org.model.dto.Meeting1DTO" resultType="com.org.model.vo.MeetingVO">
         SELECT mm.id, mm.name, mu.username as host, room_name, online, mm.create_time, link, mm.introduce,
-               mm.update_time, mm.meeting_time, mm.sign_time, user_number, sign_number, state FROM m_meeting mm
-            JOIN m_meeting_room mmr
-                on mmr.meetingid = mm.id
-            JOIN m_user_meeting mum
-                on mm.id = mum.meeting_id
-            JOIN m_user mu
-                on mum.user_id = mu.id
-            JOIN m_room mr
-                on mr.id = mmr.roomid
+        mm.update_time, mm.meeting_time, mm.sign_time, user_number, sign_number, state FROM m_meeting mm
+        JOIN m_meeting_room mmr
+        on mmr.meetingid = mm.id
+        JOIN m_user_meeting mum
+        on mm.id = mum.meeting_id
+        JOIN m_user mu
+        on mum.user_id = mu.id
+        JOIN m_room mr
+        on mr.id = mmr.roomid
         WHERE
-            mum.um_power = 3 AND mm.DELETED = 0                   <!--主持人-->
+        mum.um_power = 3 AND mm.DELETED = 0                   <!--主持人-->
         <if test="meetingname!=null and meetingname!=''">
             AND mm.name like CONCAT('%',#{meetingname},'%') <!--连接字符串-->
         </if>
